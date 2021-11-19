@@ -1,23 +1,6 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
-from pexpect import pxssh
 from getpass import getpass
-
-class SSHConnection():
-    def __init__(self):
-        self.username = None
-        self.ip = None
-        self.port = None
-        self.password = None
-    
-    def connect(self):
-        try:
-            self.ssh = pxssh.pxssh()
-            self.ssh.login(self.ip, self.username, self.password, port=self.port)
-            return True
-        except Exception as e:
-            print(e)
-            return False
 
 class VBoxManager():
     def __init__(self):
@@ -43,15 +26,7 @@ class VBoxManager():
         input_port = input("Enter SSH port: ")
         input_pass = getpass("Enter SSH password: ")
         self._test_connect_ssh(input_user, input_ip, input_port, input_pass)
-    
-    def _test_connect_ssh(self, user, ip, port, passwd):
-        print("\nConnect to SSH:")
-        # print("SSH user: {}".format(user))
-        # print("IP address: {}".format(ip))
-        # print("SSH port: {}".format(port))
-        # print("SSH password: {}".format(passwd))
-
-    
+ 
     def list_vm(self):
         print("\nList of VM:")
         for vm in self.vbox.machines:
