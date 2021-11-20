@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from getpass import getpass
 from src import sshconnect
+import re
 
 
 class VBoxManager():
@@ -45,13 +46,28 @@ class VBoxManager():
         else:
             print("Connection failed")
 
+    def __clear_line(self, string):
+        __clean_string = re.compile('(\".+\")')
+        __clean_string = __clean_string.findall(string).__str__()
+        __clean_string = __clean_string.replace("\"", "")
+        __clean_string = __clean_string.replace("'", "")
+        __clean_string = __clean_string.replace("[", "")
+        __clean_string = __clean_string.replace("]", "")
+        return __clean_string
+
+    def __format_reply_vms(self, reply):
+        for i in reply:
+            for j in i:
+                print(self.__clear_line(j.__str__()))
+
     def list_vm(self):
         print("\nList of VM:")
-        print(self.vbox.send_command("vboxmanage list vms"))
+        self.__format_reply_vms(self.vbox.send_command("vboxmanage list vms"))
 
     def list_running_vm(self):
         print("\nList of running VM:")
-        print(self.vbox.send_command("vboxmanage list runningvms"))
+        self.__format_reply_vms(
+            self.vbox.send_command("vboxmanage list runningvms"))
 
     def run_vm(self):
         print("\nRun VM:")
