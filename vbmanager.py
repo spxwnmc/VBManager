@@ -1,40 +1,102 @@
 #!/usr/bin/env python
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from getpass import getpass
+from src import sshconnect
+
 
 class VBoxManager():
-    def __init__(self):
-        pass
-    
+    def __init__(self, user=None, host=None, port=None, password=None):
+        self.user = user
+        self.host = host
+        self.port = port
+        self.password = password
+        self.vbox = sshconnect.SSHConnection()
+
     def show_menu(self):
         print("""
         1. Connect to SSH
-        1. Create VM
-        2. Delete VM
-        3. List VM
-        4. List running VM
-        5. Create Snapshot
-        6. Delete Snapshot
-        7. List Snapshot
-        8. Exit
+        2. List VM
+        3. List running VM
+        4. Run VM
+        5. Stop VM
+        6. Save VM
+        7. Exit
         """)
+
+    def __get_ssh_info(self):
+        self.user = input("Enter remote user: ")
+        self.host = input("Enter host address: ")
+        __port = input("Enter port: ")
+        if __port:
+            self.port = __port
+        else:
+            self.port = "22"
+        self.password = getpass("Enter password: ")
 
     def connect_ssh(self):
         print("\nConnect to SSH:")
-        input_user = input("Enter SSH user: ")
-        input_ip = input("Enter IP address: ")
-        input_port = input("Enter SSH port: ")
-        input_pass = getpass("Enter SSH password: ")
-        self._test_connect_ssh(input_user, input_ip, input_port, input_pass)
- 
+        self.__get_ssh_info()
+        self.vbox.__setattr__("user", self.user)
+        self.vbox.__setattr__("host", self.host)
+        self.vbox.__setattr__("port", self.port)
+        self.vbox.__setattr__("password", self.password)
+        if self.vbox.connect():
+            print("Connected to SSH")
+        else:
+            print("Connection failed")
+
     def list_vm(self):
         print("\nList of VM:")
-        for vm in self.vbox.machines:
-            print(vm.name)
+        print(self.vbox.send_command("vboxmanage list vms"))
+
+    def list_running_vm(self):
+        print("\nList of running VM:")
+        print(self.vbox.send_command("vboxmanage list runningvms"))
+
+    def run_vm(self):
+        print("\nRun VM:")
+        vm_name = input("Enter VM name: ")
+        request = "vboxmanage startvm " + vm_name + " --type headless &"
+        print(self.vbox.send_command(request))
+
+    def stop_vm(self):
+        print("\nStop VM:")
+        vm_name = input("Enter VM name: ")
+        request = "vboxmanage controlvm " + vm_name + " poweroff &"
+        print(self.vbox.send_command(request))
+
+    def save_vm(self):
+        print("\nSave VM:")
+        vm_name = input("Enter VM name: ")
+        request = "vboxmanage controlvm " + vm_name + " savestate &"
+        print(self.vbox.send_command(request))
+
+    def __del__(self):
+        self.vbox.close()
+
 
 def main():
     vb = VBoxManager()
-    vb.connect_ssh()
+    while True:
+        vb.show_menu()
+        choice = input("Enter your choice: ")
+        if choice == "1":
+            vb.connect_ssh()
+        elif choice == "2":
+            vb.list_vm()
+        elif choice == "3":
+            vb.list_running_vm()
+        elif choice == "4":
+            vb.run_vm()
+        elif choice == "5":
+            vb.stop_vm()
+        elif choice == "6":
+            vb.save_vm()
+        elif choice == "7":
+            vb.__del__()
+            break
+        else:
+            print("Invalid choice")
 
 
 if __name__ == '__main__':
