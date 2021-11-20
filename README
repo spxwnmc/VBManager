@@ -1,0 +1,36 @@
+First of all, I want explained the situation of the problem.
+
+VirtualBox is a virtualization technology that allows you to create virtual machines on your computer. It's ok for all? Because for me, it's not. And it's not a problem of the virtualization technology. It's a problem of the CLI (Command Line Interface) of VirtualBox. I get it from the fact that VirtualBox is a GUI application but you dont always have a GUI application or you just don't want to get it on server if you run VirtualBox on a remote server.
+
+I know it exist VirtualBox API for Python. But in remote server, you can't use VirtualBox API for Python. So, I need to use VBoxManage CLI or another alternative (that does not exist).
+
+For that reason, I created this a small script that will help you to manage your virtual machines. I hope you will like it.
+
+With time I will improve it.
+
+Additional information:
+
+- [x] List all virtual machines
+- [x] List all running virtual machines
+- [x] Basic management of virtual machines (start, stop, pause)
+- [ ] Create a new virtual machine
+- [ ] Delete a virtual machine
+- [ ] Clone a virtual machine
+- [ ] Rename a virtual machine
+- [ ] Change size of disk of a virtual machine
+- [ ] Change the memory of a virtual machine
+- [ ] Change the network of a virtual machine
+- [ ] SSH key's support
+- [ ] Snapshot support
+- [ ] Export/Import virtual machine
+- [ ] Verbose information of virtual machine
+
+
+Requirements:
+```bash
+paramiko
+```
+How to use:
+```bash
+python vboxmanager.py
+```
