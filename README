@@ -4,7 +4,7 @@ VirtualBox is a virtualization technology that allows you to create virtual mach
 
 I know it exist VirtualBox API for Python. But in remote server, you can't use VirtualBox API for Python. So, I need to use VBoxManage CLI or another alternative (that does not exist).
 
-For that reason, I created this a small script that will help you to manage your virtual machines. I hope you will like it.
+For that reason, I created this a small script that will help you to manage your virtual machines. I hope you like it.
 
 With time I will improve it.
 
